@@ -1,0 +1,25 @@
+* {
+  box-sizing: border-box;
+}
+
+main {
+  min-height: 80vh
+}
+
+.nav-links {
+  color: white;
+}
+
+footer .container .row .col {
+  color: white;
+}
+
+.footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.footer .nav-links:hover {
+  color: #f8f5f0;
+}
