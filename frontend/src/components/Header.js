@@ -1,12 +1,30 @@
-import React from "react";
+import React, { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import { LinkContainer } from "react-router-bootstrap";
-import { Navbar, Container, Nav, NavDropdown } from "react-bootstrap";
+import {
+  Navbar,
+  Container,
+  Nav,
+  NavDropdown,
+  Offcanvas,
+} from "react-bootstrap";
+import { logout } from "../actions/userActions";
 
 const Header = () => {
-  const userInfo = null;
+  const [show, setShow] = useState(false);
+
+  const dispatch = useDispatch();
+
+  const userLogin = useSelector((state) => state.userLogin);
+  const { userInfo } = userLogin;
+
   const logoutHandler = () => {
-    //fill me
+    dispatch(logout());
   };
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
+
   return (
     <header>
       {" "}
@@ -25,48 +43,88 @@ const Header = () => {
                 <NavDropdown title={userInfo.name} id="username">
                   {" "}
                   <LinkContainer to="/profile">
-                    <Nav.Link className="nav-links">
-                      <NavDropdown.Item>Profile</NavDropdown.Item>
-                    </Nav.Link>
+                    <NavDropdown.Item>Profile</NavDropdown.Item>
                   </LinkContainer>
-                  <NavDropdown.Item onClick={logoutHandler}>
-                    Logout
-                  </NavDropdown.Item>
+                  <LinkContainer to="/login">
+                    <NavDropdown.Item onClick={logoutHandler}>
+                      Logout
+                    </NavDropdown.Item>
+                  </LinkContainer>
                 </NavDropdown>
               ) : (
                 <LinkContainer to="/login">
                   <Nav.Link className="nav-links">
-                    <i class="fas fa-user"></i> Sign In
+                    <i className="fas fa-user"></i> Sign In
                   </Nav.Link>
                 </LinkContainer>
               )}{" "}
-              <LinkContainer to="/cart">
-                <Nav.Link className="nav-links">
-                  <i className="fas fa-shopping-cart"></i> Cart
-                </Nav.Link>
-              </LinkContainer>
-              <NavDropdown title="navigation" id="navigation">
-                <LinkContainer to="/shop">
-                  <Nav.Link>
-                    <NavDropdown.Item>SHOP</NavDropdown.Item>
+              {userInfo && userInfo.isAdmin && (
+                <NavDropdown title="admin panel" id="admin-panel">
+                  <LinkContainer to="/login">
+                    <NavDropdown.Item onClick={logoutHandler}>
+                      Logout
+                    </NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/login">
+                    <NavDropdown.Item onClick={logoutHandler}>
+                      Logout
+                    </NavDropdown.Item>
+                  </LinkContainer>
+                  <LinkContainer to="/login">
+                    <NavDropdown.Item onClick={logoutHandler}>
+                      Logout
+                    </NavDropdown.Item>
+                  </LinkContainer>
+                </NavDropdown>
+              )}
+              {userInfo && (
+                <LinkContainer to="/cart">
+                  <Nav.Link className="nav-links">
+                    <i className="fas fa-shopping-cart"></i> Cart
                   </Nav.Link>
                 </LinkContainer>
-                <LinkContainer to="/blog">
-                  <Nav.Link>
-                    <NavDropdown.Item>BLOG</NavDropdown.Item>
-                  </Nav.Link>
-                </LinkContainer>
-                <LinkContainer to="/about">
-                  <Nav.Link>
-                    <NavDropdown.Item>ABOUT</NavDropdown.Item>
-                  </Nav.Link>
-                </LinkContainer>
-                <LinkContainer to="/contact">
-                  <Nav.Link>
-                    <NavDropdown.Item>CONTACT</NavDropdown.Item>
-                  </Nav.Link>
-                </LinkContainer>
-              </NavDropdown>
+              )}
+              <Nav.Link
+                title="navigation"
+                id="navigation"
+                className="nav-links"
+                onClick={handleShow}
+              >
+                Navigation
+              </Nav.Link>
+              <Navbar.Offcanvas
+                show={show}
+                onHide={handleClose}
+                placement="end"
+              >
+                <Offcanvas.Header>
+                  <h4>NAVIGATION</h4>
+
+                  <Offcanvas.Title>
+                    <i
+                      onClick={handleClose}
+                      style={{ color: "black" }}
+                      className="text-right fas fa-times"
+                    ></i>
+                  </Offcanvas.Title>
+                </Offcanvas.Header>
+                <Offcanvas.Body>
+                  <Nav className="justify-content-start flex-grow-1 pe-3">
+                    <LinkContainer to="/shop">
+                      <Nav.Item>SHOP</Nav.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/blog">
+                      <Nav.Item>BLOG</Nav.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/about">
+                      <Nav.Item>ABOUT</Nav.Item>
+                    </LinkContainer>
+                    <LinkContainer to="/contact">
+                      <Nav.Item>CONTACT</Nav.Item>
+                    </LinkContainer>
+                  </Nav>
+                </Offcanvas.Body>
+              </Navbar.Offcanvas>
             </Nav>
           </Navbar.Collapse>
         </Container>

@@ -24,7 +24,7 @@ const Footer = () => {
                   href="https://instagram.com"
                   target="_blank"
                 >
-                  <i class="fab fa-2x fa-instagram"></i>
+                  <i className="fab fa-2x fa-instagram"></i>
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
@@ -33,7 +33,7 @@ const Footer = () => {
                   href="https://twitter.com"
                   target="_blank"
                 >
-                  <i class="fab fa-2x fa-twitter"></i>
+                  <i className="fab fa-2x fa-twitter"></i>
                 </Nav.Link>
               </Nav.Item>
               <Nav.Item>
@@ -42,7 +42,7 @@ const Footer = () => {
                   href="https://facebook.com"
                   target="_blank"
                 >
-                  <i class="fab fa-2x fa-facebook"></i>
+                  <i className="fab fa-2x fa-facebook"></i>
                 </Nav.Link>
               </Nav.Item>
             </Nav>

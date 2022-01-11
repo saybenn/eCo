@@ -13,7 +13,7 @@ const Pillar = () => {
         />
 
         <Carousel.Caption>
-          <Link to="/blog" type="button" class="btn btn-outline-secondary">
+          <Link to="/blog" type="button" className="btn btn-outline-light">
             Visit Our Blog
           </Link>
         </Carousel.Caption>
@@ -25,7 +25,7 @@ const Pillar = () => {
           rounded
         />
         <Carousel.Caption>
-          <Link to="/blog" type="button" class="btn btn-outline-primary">
+          <Link to="/blog" type="button" className="btn btn-outline-light">
             Visit Our Blog
           </Link>
         </Carousel.Caption>
@@ -38,7 +38,7 @@ const Pillar = () => {
           rounded
         />
         <Carousel.Caption>
-          <Link to="/blog" type="button" class="btn btn-outline-secondary">
+          <Link to="/blog" type="button" className="btn btn-outline-light">
             Visit Our Blog
           </Link>
         </Carousel.Caption>
