@@ -29,7 +29,7 @@ export const addItemToCart =
 
       const { data } = await axios.post(
         "/api/cart",
-        { name, price, image, _id, qty, options },
+        { name, price, image, _id, qty, options, optionName },
         config
       );
       console.log(data);

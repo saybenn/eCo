@@ -5,7 +5,7 @@ import Product from "../models/productModel.js";
 //@route GET /api/products
 //@access Public
 const getProducts = asyncHandler(async (req, res) => {
-  const pageSize = 4;
+  const pageSize = 6;
   const page = Number(req.query.pageNumber) || 1;
   const keyword = req.query.keyword
     ? {
@@ -109,24 +109,22 @@ const updateProduct = asyncHandler(async (req, res) => {
   } = req.body;
 
   const product = await Product.findById(req.params.id);
-
   if (product) {
-    product.name = name || product.name;
-    product.image = image || product.image;
-    product.brand = brand || product.brand;
-    product.category = category || product.category;
-    product.description = description || product.description;
-    product.price = price || product.price;
-    product.countInStock = countInStock || product.countInStock;
-    product.options = options || null;
-    product.optionName = optionName || null;
+    product.name = name;
+    product.image = image;
+    product.brand = brand;
+    product.category = category;
+    product.description = description;
+    product.price = price;
+    product.countInStock = countInStock;
+    product.options = options;
+    product.optionName = optionName;
 
     const updatedProduct = await product.save();
-    res.json(updatedProduct);
-    res.status(201).json(product);
+    res.status(201).json(updatedProduct);
   } else {
     res.status(404);
-    throw new Erro("Product not found");
+    throw new Error("Product not found");
   }
 });
 

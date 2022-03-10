@@ -7,14 +7,14 @@ import {
   updateUserProfile,
   getAllUsers,
   deleteUser,
-  makeUserAuthor,
-  makeUserAdmin,
   getUser,
   updateUser,
   updateUserShipping,
+  authorRequest,
 } from "../controllers/userController.js";
 import { protect, admin } from "../middle/authMiddleware.js";
 
+router.put("/:id/author", authorRequest);
 router.post("/login", authUser);
 router.put("/shipping", protect, updateUserShipping);
 router.route("/").post(registerUser).get(protect, admin, getAllUsers);
@@ -27,7 +27,5 @@ router
   .delete(protect, admin, deleteUser)
   .get(protect, admin, getUser)
   .put(protect, admin, updateUser);
-router.put("/:id/author", protect, admin, makeUserAuthor);
-router.put("/:id/admin", protect, admin, makeUserAdmin);
 
 export default router;

@@ -1,5 +1,6 @@
 import asyncHandler from "express-async-handler";
 import Order from "../models/orderModel.js";
+import User from "../models/userModel.js";
 
 //@desc Create Order
 //@route POST /api/orders
@@ -14,7 +15,8 @@ const createOrder = asyncHandler(async (req, res) => {
     shippingPrice,
     totalPrice,
   } = req.body;
-
+  const user = await User.findById(req.user._id);
+  console.log(user);
   if (orderItems && orderItems.length === 0) {
     res.status(400);
     throw new Error("No order items");
@@ -31,6 +33,8 @@ const createOrder = asyncHandler(async (req, res) => {
     });
 
     const createdOrder = await order.save();
+    user.cartItems = null;
+    await user.save();
 
     res.status(201).json(createdOrder);
   }
@@ -71,10 +75,16 @@ const getOwnOrders = asyncHandler(async (req, res) => {
 //@route GET /api/orders
 //@access Admin
 const getAllOrders = asyncHandler(async (req, res) => {
-  const orders = await Order.find({});
+  const pageSize = 6;
+  const page = Number(req.query.pageNumber) || 1;
+
+  const count = await Order.count({});
+  const orders = await Order.find({})
+    .limit(pageSize)
+    .skip(pageSize * (page - 1));
 
   if (orders) {
-    res.json(orders);
+    res.json({ orders, page, pages: Math.ceil(count / pageSize) });
   } else {
     res.status(404);
     throw new Error("Orders not found");
@@ -103,6 +113,7 @@ const updateOrderPaid = asyncHandler(async (req, res) => {
 //@route PUT /api/orders/:id/deliver
 //@access Admin
 const updateOrderDelivered = asyncHandler(async (req, res) => {
+  console.log(req.body);
   const order = await Order.findById(req.params.id);
 
   if (order) {

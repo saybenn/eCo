@@ -18,12 +18,19 @@ import {
   productDetailsReducer,
   topProductsReducer,
   productReviewReducer,
+  productCreateReducer,
+  productDeleteReducer,
+  productUpdateReducer,
 } from "./reducers/productReducers.js";
 import {
   userRegisterReducer,
   userUpdateProfileReducer,
   userDetailsReducer,
   userLoginReducer,
+  userListReducer,
+  userDeleteReducer,
+  userUpdateReducer,
+  userAuthorReducer,
 } from "./reducers/userReducers.js";
 import {
   cartAddReducer,
@@ -36,6 +43,7 @@ import {
   orderDetailsReducer,
   orderPayReducer,
   orderDeliverReducer,
+  orderAllReducer,
 } from "./reducers/orderReducers.js";
 
 const reducer = combineReducers({
@@ -52,10 +60,17 @@ const reducer = combineReducers({
   productDetails: productDetailsReducer,
   topProducts: topProductsReducer,
   productReview: productReviewReducer,
+  productCreate: productCreateReducer,
+  productDelete: productDeleteReducer,
+  productUpdate: productUpdateReducer,
   userRegister: userRegisterReducer,
   userUpdateProfile: userUpdateProfileReducer,
   userDetails: userDetailsReducer,
+  userAuthor: userAuthorReducer,
   userLogin: userLoginReducer,
+  userList: userListReducer,
+  userDelete: userDeleteReducer,
+  userUpdate: userUpdateReducer,
   cartAdd: cartAddReducer,
   cartGet: cartGetReducer,
   cartControl: cartControlReducer,
@@ -64,6 +79,7 @@ const reducer = combineReducers({
   orderDetails: orderDetailsReducer,
   orderPay: orderPayReducer,
   orderDeliver: orderDeliverReducer,
+  orderAll: orderAllReducer,
 });
 
 const userInfoFromStorage = localStorage.getItem("userInfo")
@@ -76,7 +92,6 @@ const checkTokenExpirationMiddleware = () => (next) => (action) => {
   const token =
     JSON.parse(localStorage.getItem("userInfo")) &&
     JSON.parse(localStorage.getItem("userInfo"))["token"];
-  console.log(token);
   if (token) {
     if (jwt.decode(token).exp < Date.now() / 1000) {
       localStorage.removeItem("userInfo");

@@ -15,10 +15,21 @@ import {
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
   USER_PAYMENT_METHOD_SAVE,
-  USER_SHIPPING_SAVE,
   USER_SHIPPING_SAVE_FAIL,
   USER_SHIPPING_SAVE_REQUEST,
   USER_SHIPPING_SAVE_SUCCESS,
+  USER_LIST_SUCCESS,
+  USER_LIST_FAIL,
+  USER_LIST_REQUEST,
+  USER_DELETE_FAIL,
+  USER_DELETE_SUCCESS,
+  USER_DELETE_REQUEST,
+  USER_UPDATE_FAIL,
+  USER_UPDATE_SUCCESS,
+  USER_UPDATE_REQUEST,
+  USER_AUTHOR_SUCCESS,
+  USER_AUTHOR_FAIL,
+  USER_AUTHOR_REQUEST,
 } from "../constants/userConstants";
 
 export const register = (name, email, password) => async (dispatch) => {
@@ -89,7 +100,7 @@ export const logout = () => async (dispatch) => {
   }
 };
 
-export const getUserDetails = () => async (dispatch, getState) => {
+export const getUserDetails = (id) => async (dispatch, getState) => {
   try {
     dispatch({ type: USER_DETAILS_REQUEST });
 
@@ -103,7 +114,7 @@ export const getUserDetails = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/users/profile`, config);
+    const { data } = await axios.get(`/api/users/${id}`, config);
 
     dispatch({ type: USER_DETAILS_SUCCESS, payload: data });
   } catch (error) {
@@ -117,9 +128,9 @@ export const getUserDetails = () => async (dispatch, getState) => {
   }
 };
 
-export const getUserShipping = () => async (dispatch, getState) => {
+export const listUsers = () => async (dispatch, getState) => {
   try {
-    dispatch({ type: USER_SHIPPING_REQUEST });
+    dispatch({ type: USER_LIST_REQUEST });
 
     const {
       userLogin: { userInfo },
@@ -131,12 +142,12 @@ export const getUserShipping = () => async (dispatch, getState) => {
       },
     };
 
-    const { data } = await axios.get(`/api/users/shipping`, config);
+    const { data } = await axios.get(`/api/users`, config);
 
-    dispatch({ type: USER_SHIPPING_SUCCESS, payload: data });
+    dispatch({ type: USER_LIST_SUCCESS, payload: data });
   } catch (error) {
     dispatch({
-      type: USER_SHIPPING_FAIL,
+      type: USER_LIST_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
@@ -144,6 +155,94 @@ export const getUserShipping = () => async (dispatch, getState) => {
     });
   }
 };
+
+export const deleteUser = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_DELETE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.delete(`/api/users/${id}`, config);
+
+    dispatch({ type: USER_DELETE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const requestAuthorship = (id) => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_AUTHOR_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+    await axios.put(`/api/users/${id}/author`, {}, config);
+
+    dispatch({ type: USER_AUTHOR_SUCCESS });
+  } catch (error) {
+    dispatch({
+      type: USER_AUTHOR_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const updateUser =
+  (id, name, email, isAdmin, isAuthor) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: USER_UPDATE_REQUEST });
+
+      const {
+        userLogin: { userInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+
+      const { data } = await axios.put(
+        `/api/users/${id}`,
+        { name, email, isAdmin, isAuthor },
+        config
+      );
+
+      dispatch({ type: USER_UPDATE_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: USER_UPDATE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const updateProfile =
   (name, email, password, authorRequest = false) =>
@@ -194,13 +293,13 @@ export const saveShippingAddress =
         },
       };
 
-      await axios.put(
+      const { data } = await axios.put(
         "/api/users/shipping",
         { address, city, state, postalCode, country },
         config
       );
 
-      dispatch({ type: USER_SHIPPING_SAVE_SUCCESS });
+      dispatch({ type: USER_SHIPPING_SAVE_SUCCESS, payload: data });
     } catch (error) {
       dispatch({
         type: USER_SHIPPING_SAVE_FAIL,
@@ -211,34 +310,6 @@ export const saveShippingAddress =
       });
     }
   };
-
-// export const saveCartItems = (cart) => async (dispatch,getState) => {
-//   try {
-//     dispatch({ type: USER_cart_SAVE_REQUEST });
-
-//     const {
-//       userLogin: { userInfo },
-//     } = getState();
-
-//     const config = {
-//       headers: {
-//         Authorization: `Bearer ${userInfo.token}`,
-//       },
-//     };
-
-//     await axios.put("/api/users/cart", data, config);
-
-//     dispatch({ type: USER_cart_SAVE_SUCCESS });
-//   } catch (error) {
-//     dispatch({
-//       type: USER_cart_SAVE_FAIL,
-//       payload:
-//         error.response && error.response.data.message
-//           ? error.response.data.message
-//           : error.message,
-//     });
-//   }
-// }
 
 export const savePaymentMethod = (data) => async (dispatch) => {
   dispatch({ type: USER_PAYMENT_METHOD_SAVE, payload: data });

@@ -38,6 +38,9 @@ const BlogPost = ({ blog }) => {
     }
   };
 
+  const deleteHandler = (id) => {
+    if (window.confirm("Are you sure")) dispatch(deleteBlogPost(id));
+  };
   const submitHandler = (e) => {
     e.preventDefault();
     if (!userInfo) {
@@ -71,14 +74,14 @@ const BlogPost = ({ blog }) => {
           <Row>
             <Col md={10}>{blog.title}</Col>
             {userInfo && userInfo._id === blog.user && (
-              <Col md={1}>
+              <Col className="d-flex justify-content-end" md={2}>
                 <Button
                   variant="outline-dark delete-btn"
-                  onClick={() => dispatch(deleteBlogPost(blog._id))}
+                  onClick={() => deleteHandler(blog._id)}
                 >
                   <i
                     style={{ color: "red" }}
-                    className="text-right fas fa-times"
+                    className="text-right fas fa-2x fa-times"
                   ></i>
                 </Button>
               </Col>

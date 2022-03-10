@@ -60,23 +60,18 @@ const getSingleBlogPost = asyncHandler(async (req, res) => {
 //@route POST /api/blogs
 //@access Author
 const createBlogPost = asyncHandler(async (req, res) => {
-  const { title, body } = req.body;
+  const { title, body, image } = req.body;
 
   const post = await Blog.create({
     title,
     body,
+    image,
     user: req.user._id,
     author: req.user.name,
   });
 
   if (post) {
-    res.status(201).json({
-      title: post.title,
-      author: post.author,
-      body: post.body,
-      date: post.createdAt,
-      id: post._id,
-    });
+    res.status(201).json(post);
   } else {
     res.status(400);
     throw new Error("Post could not be created.");
@@ -127,18 +122,18 @@ const likePost = asyncHandler(async (req, res) => {
       post.numLikes = post.likes.length;
 
       const updatedPost = await post.save();
-      res.status(201).json(updatedPost.numLikes);
+      res.status(201).json(updatedPost);
     } else {
       const like = {
         userid: user._id,
         username: user.name,
       };
 
-      post.likes.push(like);
+      await post.likes.push(like);
       post.numLikes = post.likes.length;
 
       const updatedPost = await post.save();
-      res.status(201).json(updatedPost.numLikes);
+      res.status(201).json(updatedPost);
     }
   } else {
     res.status(404);

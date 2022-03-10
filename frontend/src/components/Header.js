@@ -31,7 +31,10 @@ const Header = () => {
       <Navbar className="py-3 bg-primary" expand="lg" collapseOnSelect>
         <Container>
           <LinkContainer to="/">
-            <Navbar.Brand>eCo</Navbar.Brand>
+            <Navbar.Brand>
+              {" "}
+              <i class="nav-icon fa-solid fa-mug-hot"></i> eCo
+            </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />
           <Navbar.Collapse
@@ -60,20 +63,14 @@ const Header = () => {
               )}{" "}
               {userInfo && userInfo.isAdmin && (
                 <NavDropdown title="admin panel" id="admin-panel">
-                  <LinkContainer to="/login">
-                    <NavDropdown.Item onClick={logoutHandler}>
-                      Logout
-                    </NavDropdown.Item>
+                  <LinkContainer to="/admin/userlist">
+                    <NavDropdown.Item>UserList</NavDropdown.Item>
                   </LinkContainer>
-                  <LinkContainer to="/login">
-                    <NavDropdown.Item onClick={logoutHandler}>
-                      Logout
-                    </NavDropdown.Item>
+                  <LinkContainer to="/admin/productlist">
+                    <NavDropdown.Item>ProductList</NavDropdown.Item>
                   </LinkContainer>
-                  <LinkContainer to="/login">
-                    <NavDropdown.Item onClick={logoutHandler}>
-                      Logout
-                    </NavDropdown.Item>
+                  <LinkContainer to="/admin/orderlist">
+                    <NavDropdown.Item>OrderList</NavDropdown.Item>
                   </LinkContainer>
                 </NavDropdown>
               )}
@@ -110,16 +107,19 @@ const Header = () => {
                 </Offcanvas.Header>
                 <Offcanvas.Body>
                   <Nav className="justify-content-start flex-grow-1 pe-3">
-                    <LinkContainer to="/shop">
+                    <LinkContainer onClick={handleClose} to="/">
+                      <Nav.Item>HOME</Nav.Item>
+                    </LinkContainer>
+                    <LinkContainer onClick={handleClose} to="/shop">
                       <Nav.Item>SHOP</Nav.Item>
                     </LinkContainer>
-                    <LinkContainer to="/blog">
+                    <LinkContainer onClick={handleClose} to="/blog">
                       <Nav.Item>BLOG</Nav.Item>
                     </LinkContainer>
-                    <LinkContainer to="/about">
+                    <LinkContainer onClick={handleClose} to="/about">
                       <Nav.Item>ABOUT</Nav.Item>
                     </LinkContainer>
-                    <LinkContainer to="/contact">
+                    <LinkContainer onClick={handleClose} to="/contact">
                       <Nav.Item>CONTACT</Nav.Item>
                     </LinkContainer>
                   </Nav>

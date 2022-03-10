@@ -26,10 +26,7 @@ export const cartAddReducer = (state = {}, action) => {
   }
 };
 
-export const cartGetReducer = (
-  state = { cartItems: [], shippingAddress: {} },
-  action
-) => {
+export const cartGetReducer = (state = {}, action) => {
   switch (action.type) {
     case GET_CART_REQUEST:
       return { loading: true };
@@ -37,6 +34,7 @@ export const cartGetReducer = (
       return { loading: false, cartItems: action.payload };
     case GET_CART_FAIL:
       return { loading: false, error: action.payload };
+
     default:
       return state;
   }

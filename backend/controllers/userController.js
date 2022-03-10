@@ -129,13 +129,11 @@ const updateUserShipping = asyncHandler(async (req, res) => {
     await user.save();
 
     res.json(user.shippingAddress);
-    console.log(user.shippingAddress);
   } else {
     res.status(404);
     throw new Error("User not found");
   }
 });
-
 //@desc Get all users
 //@route GET /api/users
 //@access Admin
@@ -165,40 +163,6 @@ const deleteUser = asyncHandler(async (req, res) => {
   }
 });
 
-//@desc Make user author
-//@route PUT /api/users/:id/author
-//@access Admin
-const makeUserAuthor = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id);
-
-  if (user) {
-    user.isAuthor = true;
-    user.authorRequest = false;
-    const updatedUser = await user.save();
-
-    res.json(updatedUser);
-  } else {
-    res.status(400);
-    throw new Error("Could not make user author.");
-  }
-});
-
-//@desc Make user Admin
-//@route PUT /api/users/:id/admin
-//@access Admin
-const makeUserAdmin = asyncHandler(async (req, res) => {
-  const user = await User.findById(req.params.id);
-  if (user) {
-    user.isAdmin = true;
-    const updatedUser = await user.save();
-
-    res.json(updatedUser);
-  } else {
-    res.status(400);
-    throw new Error("Could not make user admin.");
-  }
-});
-
 //@desc get user by ID
 //@route GET /api/users/:id
 //@access Admin
@@ -214,6 +178,21 @@ const getUser = asyncHandler(async (req, res) => {
 });
 
 //@desc Update User
+//@route PUT /api/users/:id/author
+//@access Admin
+const authorRequest = asyncHandler(async (req, res) => {
+  const user = await User.findById(req.params.id);
+  if (user) {
+    user.authorRequest = true;
+    await user.save();
+    res.json(user);
+  } else {
+    res.status(404);
+    throw new Error("Request could not be made.");
+  }
+});
+
+//@desc Update User
 //@route PUT /api/users/:id
 //@access Admin
 const updateUser = asyncHandler(async (req, res) => {
@@ -224,7 +203,12 @@ const updateUser = asyncHandler(async (req, res) => {
     user.email = req.body.email || user.email;
     user.isAdmin = req.body.isAdmin;
     user.isAuthor = req.body.isAuthor;
-    user.password = user.password;
+    user.cartItems = user.cartItems;
+    user.shippingAddress = user.shippingAddress;
+
+    if (user.isAuthor) {
+      user.authorRequest = false;
+    }
 
     const updatedUser = await user.save();
 
@@ -235,7 +219,6 @@ const updateUser = asyncHandler(async (req, res) => {
       isAdmin: updatedUser.isAdmin,
       isAuthor: updatedUser.isAuthor,
       cartItems: updatedUser.cartItems,
-      token: generateToken(updatedUser._id),
     });
   } else {
     res.status(404);
@@ -250,9 +233,8 @@ export {
   updateUserProfile,
   getAllUsers,
   deleteUser,
-  makeUserAuthor,
-  makeUserAdmin,
   getUser,
   updateUser,
   updateUserShipping,
+  authorRequest,
 };

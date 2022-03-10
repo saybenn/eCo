@@ -126,34 +126,39 @@ export const commentBlog = (comment, id) => async (dispatch, getState) => {
   }
 };
 
-export const createBlogPost = (title, body) => async (dispatch, getState) => {
-  try {
-    dispatch({ type: CREATE_BLOG_REQUEST });
+export const createBlogPost =
+  (title, body, image) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: CREATE_BLOG_REQUEST });
 
-    const {
-      userLogin: { userInfo },
-    } = getState();
+      const {
+        userLogin: { userInfo },
+      } = getState();
 
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-        "Content-Type": "application/json",
-      },
-    };
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+          "Content-Type": "application/json",
+        },
+      };
 
-    const { data } = await axios.post("api/blogs/", { title, body }, config);
+      const { data } = await axios.post(
+        "api/blogs/",
+        { title, body, image },
+        config
+      );
 
-    dispatch({ type: CREATE_BLOG_SUCCESS, payload: data });
-  } catch (error) {
-    dispatch({
-      type: CREATE_BLOG_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    });
-  }
-};
+      dispatch({ type: CREATE_BLOG_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: CREATE_BLOG_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
 
 export const deleteBlogPost = (id) => async (dispatch, getState) => {
   try {
@@ -162,13 +167,6 @@ export const deleteBlogPost = (id) => async (dispatch, getState) => {
     const {
       userLogin: { userInfo },
     } = getState();
-
-    const config = {
-      headers: {
-        Authorization: `Bearer ${userInfo.token}`,
-        "Content-Type": "application/json",
-      },
-    };
 
     await axios.delete("api/blogs/", {
       headers: {
