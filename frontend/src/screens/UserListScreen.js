@@ -80,7 +80,7 @@ const UserListScreen = () => {
                           style={{ color: "green" }}
                         ></i>
                       ) : user.authorRequest ? (
-                        <i class="fas fa-pen-square"></i>
+                        <i className="fas fa-pen-square"></i>
                       ) : (
                         <i
                           className="fas fa-times"

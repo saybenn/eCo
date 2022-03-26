@@ -38,6 +38,8 @@ const getUserProfile = asyncHandler(async (req, res) => {
       _id: user._id,
       name: user.name,
       email: user.email,
+      shippingAddress: user.shippingAddress,
+      cartItems: user.cartItems,
       isAuthor: user.isAuthor,
       authorRequest: user.authorRequest,
     });

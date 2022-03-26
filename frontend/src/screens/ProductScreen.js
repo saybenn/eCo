@@ -41,12 +41,6 @@ const ProductScreen = () => {
     if (reviewSuccess) {
       dispatch(getProductDetails(id));
     }
-    if (success) {
-      setMessage(`${product.name} has been added to your cart.`);
-      setTimeout(() => {
-        setMessage(false);
-      }, 3000);
-    }
     if (cartError) {
       setMessage(
         `There was a problem adding ${product.name} to your cart. Try again or check if you are logged in.`
@@ -56,7 +50,7 @@ const ProductScreen = () => {
         dispatch({ type: ADD_CART_RESET });
       }, 3000);
     }
-  }, [dispatch, success, cartError, reviewSuccess, product.name, id]);
+  }, [dispatch, cartError, reviewSuccess, product.name, id]);
 
   const addToCartHandler = () => {
     if (product.optionName && !options) {
@@ -76,6 +70,10 @@ const ProductScreen = () => {
           product.optionName
         )
       );
+      setMessage(`${product.name} has been added to your cart.`);
+      setTimeout(() => {
+        setMessage(false);
+      }, 3500);
     }
   };
 
@@ -89,16 +87,16 @@ const ProductScreen = () => {
   return (
     <>
       <Container>
-        <Link to="/" type="button" className="btn btn-dark my-3">
+        <Link to="/shop" type="button" className="btn btn-dark my-3">
           Back
         </Link>
-        {message && <Message variant="light">{message}</Message>}
+        {message && <Message variant="info">{message}</Message>}
         {loading && <Loader />}
         {error && <Message variant="danger">{error}</Message>}
         {product && (
           <>
             <Row className="d-flex ">
-              <Col md={5} fluid>
+              <Col md={5}>
                 <Image
                   src={product.image}
                   alt={product.name}
@@ -226,7 +224,7 @@ const ProductScreen = () => {
                           onChange={(e) => setComment(e.target.value)}
                         ></Form.Control>
                       </Form.Group>
-                      <Button type="submit" variant="primary">
+                      <Button type="submit" variant="secondary">
                         Submit Review
                       </Button>
                     </Form>

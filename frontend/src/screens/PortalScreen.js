@@ -12,40 +12,40 @@ const PortalScreen = () => {
         <div>
           <Link to="/">
             {" "}
-            <i class="fa-solid fa-house"></i>
+            <i className="fa-solid fa-house"></i>
           </Link>
           <div className="tab"></div>
         </div>
         <div>
           <Link to={userInfo ? "/profile" : "/login"}>
-            <i class="fa-solid fa-user"></i>{" "}
+            <i className="fa-solid fa-user"></i>{" "}
           </Link>
         </div>
         <div>
           <Link to="/shop">
-            <i class="fa-solid fa-bag-shopping"></i>{" "}
+            <i className="fa-solid fa-bag-shopping"></i>{" "}
           </Link>
         </div>
         <div>
           <Link to="/blog">
-            <i class="fa-solid fa-book"></i>{" "}
+            <i className="fa-solid fa-book"></i>{" "}
           </Link>
         </div>
         <div>
           <Link to="/about">
-            <i class="fa-solid fa-chalkboard-user"></i>{" "}
+            <i className="fa-solid fa-chalkboard-user"></i>{" "}
           </Link>
         </div>
         <div>
           <Link to="/contact">
-            <i class="fa-solid fa-envelope"></i>{" "}
+            <i className="fa-solid fa-envelope"></i>{" "}
           </Link>
         </div>
       </Col>
       <Col className=" portal-body" xs={12} sm={12} md={8}>
         <Link to="/">
           <div className="portal-icon-body">
-            <i class="portal-icon fa-solid fa-mug-hot"></i>{" "}
+            <i className="portal-icon fa-solid fa-mug-hot"></i>{" "}
             <div>
               <h1>eCo</h1>
             </div>

@@ -2,7 +2,7 @@ import React from "react";
 import { Nav } from "react-bootstrap";
 import { LinkContainer } from "react-router-bootstrap";
 
-const CheckoutSteps = ({ step1, step2, step3, step4 }) => {
+const CheckoutSteps = ({ step1, step2, step3, step4, id }) => {
   return (
     <Nav className="justify-content-center mb-4">
       <Nav.Item>
@@ -25,15 +25,28 @@ const CheckoutSteps = ({ step1, step2, step3, step4 }) => {
       </Nav.Item>
       <Nav.Item>
         {step3 ? (
-          <LinkContainer to="/payment">
+          <LinkContainer to={`/order/${id}`}>
             <Nav.Link>Payment</Nav.Link>
           </LinkContainer>
         ) : (
-          <Nav.Link disabled>Place Order</Nav.Link>
+          <Nav.Link disabled>Payment</Nav.Link>
+        )}
+      </Nav.Item>
+      <Nav.Item>
+        {step4 ? (
+          <LinkContainer to={`/order/review/${id}`}>
+            <Nav.Link>Review Order</Nav.Link>
+          </LinkContainer>
+        ) : (
+          <Nav.Link disabled>Review Order</Nav.Link>
         )}
       </Nav.Item>
     </Nav>
   );
+};
+
+CheckoutSteps.defaultProps = {
+  id: "",
 };
 
 export default CheckoutSteps;

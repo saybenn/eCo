@@ -29,7 +29,7 @@ import {
   DELETE_BLOG_FAIL,
 } from "../constants/blogConstants";
 
-export const blogListReducer = (state = { blogs: [] }, action) => {
+export const blogListReducer = (state = {}, action) => {
   switch (action.type) {
     case BLOG_LIST_REQUEST:
       return { loading: true };
@@ -70,7 +70,7 @@ export const blogCommentReducer = (state = {}, action) => {
   }
 };
 
-export const blogCreateReducer = (state = { blog: {} }, action) => {
+export const blogCreateReducer = (state = {}, action) => {
   switch (action.type) {
     case CREATE_BLOG_REQUEST:
       return { loading: true };
@@ -109,7 +109,7 @@ export const blogCommentDeleteReducer = (state = {}, action) => {
   }
 };
 
-export const topBlogReducer = (state = { blogs: [] }, action) => {
+export const topBlogReducer = (state = {}, action) => {
   switch (action.type) {
     case TOP_BLOG_REQUEST:
       return { loading: true };
@@ -122,7 +122,7 @@ export const topBlogReducer = (state = { blogs: [] }, action) => {
   }
 };
 
-export const singleBlogReducer = (state = { blog: {} }, action) => {
+export const singleBlogReducer = (state = {}, action) => {
   switch (action.type) {
     case SINGLE_BLOG_REQUEST:
       return { loading: true };
@@ -135,7 +135,7 @@ export const singleBlogReducer = (state = { blog: {} }, action) => {
   }
 };
 
-export const myBlogReducer = (state = { blogs: [] }, action) => {
+export const myBlogReducer = (state = {}, action) => {
   switch (action.type) {
     case GET_MY_BLOGS_REQUEST:
       return { loading: true };

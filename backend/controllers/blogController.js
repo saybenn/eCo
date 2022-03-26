@@ -7,7 +7,6 @@ import User from "../models/userModel.js";
 //@access Public
 const getBlogPosts = asyncHandler(async (req, res) => {
   const posts = await Blog.find({});
-
   if (posts) {
     res.json(posts);
   } else {
@@ -60,12 +59,13 @@ const getSingleBlogPost = asyncHandler(async (req, res) => {
 //@route POST /api/blogs
 //@access Author
 const createBlogPost = asyncHandler(async (req, res) => {
-  const { title, body, image } = req.body;
+  const { title, body, image, description } = req.body;
 
   const post = await Blog.create({
     title,
     body,
     image,
+    description,
     user: req.user._id,
     author: req.user.name,
   });

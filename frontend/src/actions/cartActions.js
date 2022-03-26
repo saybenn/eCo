@@ -58,7 +58,6 @@ export const controlCart = (_id, input) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    console.log(_id);
     const { data } = await axios.put("/api/cart", { _id, input }, config);
 
     dispatch({ type: CONTROL_CART_SUCCESS, payload: data });

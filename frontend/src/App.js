@@ -1,11 +1,5 @@
 import React from "react";
-import {
-  BrowserRouter as Router,
-  Routes,
-  Route,
-  useLocation,
-} from "react-router-dom";
-import { Container } from "react-bootstrap";
+import { Routes, Route, useLocation } from "react-router-dom";
 import Header from "./components/Header";
 import Footer from "./components/Footer";
 import HomeScreen from "./screens/HomeScreen";
@@ -17,12 +11,12 @@ import CartScreen from "./screens/CartScreen";
 import ProfileScreen from "./screens/ProfileScreen";
 import ShopScreen from "./screens/ShopScreen";
 import BlogScreen from "./screens/BlogScreen";
+import SingleBlogScreen from "./screens/SingleBlogScreen";
 import ShippingScreen from "./screens/ShippingScreen";
-import PlaceOrderScreen from "./screens/PlaceOrderScreen";
-import PaymentScreen from "./screens/PaymentScreen";
+import OrderReviewScreen from "./screens/OrderReviewScreen";
 import ContactScreen from "./screens/ContactScreen";
 import AboutScreen from "./screens/AboutScreen";
-import OrderScreen from "./screens/OrderScreen";
+import OrderPayScreen from "./screens/OrderPayScreen";
 import OrderListScreen from "./screens/OrderListScreen";
 import UserListScreen from "./screens/UserListScreen";
 import UserEditScreen from "./screens/UserEditScreen";
@@ -45,6 +39,7 @@ const App = () => {
           <Route path="/register" element={<RegisterScreen />} />
           <Route path="/cart" element={<CartScreen />} />
           <Route path="/blog" element={<BlogScreen />} />
+          <Route path="/blog/:id" element={<SingleBlogScreen />} />
           <Route path="/shipping" element={<ShippingScreen />} />
           <Route path="/contact" element={<ContactScreen />} />
           <Route path="/about" element={<AboutScreen />} />
@@ -64,9 +59,8 @@ const App = () => {
             element={<ProductEditScreen />}
           />
           <Route path="/admin/user/:id/edit" element={<UserEditScreen />} />
-          <Route path="/payment" element={<PaymentScreen />} />
-          <Route path="/placeorder" element={<PlaceOrderScreen />} />
-          <Route path="/order/:id" element={<OrderScreen />} />
+          <Route path="/order/review/:id" element={<OrderReviewScreen />} />
+          <Route path="/order/:id" element={<OrderPayScreen />} />
           <Route path="/shop/search/:keyword" element={<ShopScreen />} exact />
           <Route path="/shop/page/:pageNumber" element={<ShopScreen />} exact />
           <Route

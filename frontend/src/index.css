@@ -49,6 +49,12 @@ footer .container .row .col {
   margin: auto;
 }
 
+.blogContainer {
+  min-height: 80vh;
+  width: 75vw;
+  margin: auto;
+}
+
 main {
   min-height: 89vh;
 }
@@ -148,36 +154,6 @@ cursor: pointer;
   background: #8e8c84;
 }
 
-/* Home Page */
-.home-link {
-  background-color: rgb(62, 63, 58);
-  border-radius: 4px;
-}
-
-.home-link h4 {
-  display: none;
-}
-.home-link:hover h4 {
-  display: inline-block;
-  color: white;
-  margin: 0 1rem;
-  transition: all 1200ms ease-in-out;
-
-}
-
-.home-link:hover {
-  transform: scaleX(90%);
-  transform-origin: left;
-  transition: all 1200ms ease-in-out;
-
-}
-
-.home-link:hover > .link-slider{
-  transform: translateX(90%);
-  transform-origin: left;
-  transition: all 1200ms ease-in-out;
-}
-
 /* Blog Post and Comment Modal */
 .modal-body {
   width: 100%;
@@ -202,15 +178,9 @@ cursor: pointer;
   display: inline;
 }
 
-.blog-action-btn:focus {
-  border: none;
-}
-.blog-action-btn:active {
-  border: none;
-}
-
 .delete-btn {
   border: none;
+  padding: 0;
 }
 .delete-btn:hover {
   background: none;
@@ -244,8 +214,129 @@ color: white;
 margin: .7rem;
 }
 
+.soloblog-img {
+  max-height: 40vh;
+  box-shadow: 0px 0px 4px .2px black;
+}
+
+/* Intro Carousel */
+.carousel {
+  position: relative;
+  height: 100%;
+  width: 100%;
+}
+
+.carousel .carousel-item .overlay {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background: black;
+  opacity: .5;
+}
+
+.carousel .carousel-item .carousel-image {
+  height: 90vh;
+}
+
+.carousel .carousel-item .hero {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 14%;
+  left: 10%;
+  text-align: left;
+  z-index: 4;
+  opacity: 1;
+  color: white;
+}
+
+.hero h1 {
+  font-size: 6rem;
+}
+
+.hero h2 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+.hero button {
+  padding: .7rem;
+  margin: .6rem 0;
+  font-size: 1.1rem;
+  border: 2px solid rgb(142, 140, 132)
+}
+
+/* Top Product Carousel */
+.product-carousel {
+  border: 1px solid rgb(114, 116, 108);
+  box-shadow: 0 0 3px 1px rgb(142, 140, 132);
+  border-radius: 8px;
+  width: 85%;
+  background: rgb(142, 140, 132);
+}
+
+.product-carousel img {
+  border-radius: 8px;
+  border-right: 1px solid rgb(142, 140, 132);
+
+}
+
+.product-carousel .carousel-right {
+padding: 1rem;
+
+}
+
+/* Text */
+.mission-statement {
+  line-height: 2.3rem;
+  font-size: 1.2rem;
+}
+
+.triangle {
+  font-size: 3rem;
+  text-align: center;
+  position: relative;
+}
+
+.tree {
+  margin: 0rem .5rem 4rem;
+}
+
 /* Utilities */
 .border-right {
   border-right: 1px solid black;
 }
 
+hr.style-two {
+  border: 0;
+  height: 1px;
+  width: 60%;
+  position: relative;
+  margin: auto;
+  background: rgb(114, 116, 108)
+
+}
+
+hr.style-two:before {
+  content: "";
+      width: 6px;
+      height: 6px;
+      background: rgb(114, 116, 108);
+      display: inline-block;
+      border: 2px solid rgb(114, 116, 108);
+      position: absolute;
+      top: -5px;
+      left: 50%;
+      margin: 0 0 0 -3px;
+      transform:rotate(45deg);
+      -ms-transform:rotate(45deg); /* IE 9 */
+      -webkit-transform:rotate(45deg); /* Opera, Chrome, and Safari */
+}
+
+/* Modal */
+.modal-dialog.w-50 {
+  width: 50%;
+  max-width: 50%;
+}

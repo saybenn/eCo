@@ -8,7 +8,7 @@ const Product = ({ product }) => {
     card: {},
     cardImage: {
       objectFit: "cover",
-      "max-height": "40vh",
+      maxHeight: "40vh",
     },
   };
   return (

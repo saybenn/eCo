@@ -33,7 +33,7 @@ const Header = () => {
           <LinkContainer to="/">
             <Navbar.Brand>
               {" "}
-              <i class="nav-icon fa-solid fa-mug-hot"></i> eCo
+              <i className="nav-icon fa-solid fa-mug-hot"></i> eCo
             </Navbar.Brand>
           </LinkContainer>
           <Navbar.Toggle aria-controls="basic-navbar-nav" />

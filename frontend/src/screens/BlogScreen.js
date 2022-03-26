@@ -1,17 +1,9 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
+import ReactQuill from "react-quill";
+import "react-quill/dist/quill.snow.css";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  Row,
-  Col,
-  Modal,
-  Button,
-  Form,
-  Image,
-  Toast,
-  Card,
-} from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Row, Col, Modal, Button, Form, Toast, Card } from "react-bootstrap";
 import Container from "../components/Container";
 import BlogScreenBlogPosts from "../components/BlogScreenBlogPosts";
 import FormContainer from "../components/FormContainer";
@@ -20,13 +12,13 @@ import Message from "../components/Message";
 import { listBlogs, createBlogPost } from "../actions/blogActions";
 import Tippy from "@tippy.js/react";
 import { requestAuthorship } from "../actions/userActions";
-import { BLOG_LIKE_RESET } from "../constants/blogConstants";
 
 const BlogScreen = () => {
+  const [convertedText, setConvertedText] = useState("");
+  const [description, setDescription] = useState("");
   const [message, setMessage] = useState("false");
   const [toastShow, setToastShow] = useState(false);
   const [postShow, setPostShow] = useState(false);
-  const [postBody, setPostBody] = useState("");
   const [postTitle, setPostTitle] = useState("");
   const [uploading, setUploading] = useState(false);
   const [image, setImage] = useState("");
@@ -83,8 +75,9 @@ const BlogScreen = () => {
         setMessage(false);
       }, 5000);
     } else {
-      dispatch(createBlogPost(postTitle, postBody, image));
-      setPostBody("");
+      dispatch(createBlogPost(postTitle, convertedText, image, description));
+      setConvertedText("");
+      setDescription("");
       setPostTitle("");
     }
   };
@@ -123,7 +116,7 @@ const BlogScreen = () => {
             {authorSuccess && <Message variant="info">{message}</Message>}
           </Col>
           <Col md={3} className="d-flex justify-content-end align-items-end">
-            {userInfo.isAuthor && (
+            {userInfo && userInfo.isAuthor && (
               <Button variant="" onClick={handlePostShow}>
                 Create a Post <i className="fas fa-4x fa-edit"></i>
               </Button>
@@ -150,7 +143,7 @@ const BlogScreen = () => {
             height: 5,
           }}
         />
-        <Modal show={postShow} onHide={handlePostClose}>
+        <Modal dialogClassName="w-50" show={postShow} onHide={handlePostClose}>
           <Modal.Header closeButton>
             <Modal.Title>Create A Post</Modal.Title>
           </Modal.Header>
@@ -164,13 +157,22 @@ const BlogScreen = () => {
                     onChange={(e) => setPostTitle(e.target.value)}
                   ></Form.Control>
                 </Form.Group>
+                <Form.Label>Post Description</Form.Label>
+                <Form.Group controlId="description">
+                  <Form.Control
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    placeholder="What's this blog post about?"
+                  ></Form.Control>
+                </Form.Group>
                 <Form.Label>Post Body</Form.Label>
                 <Form.Group controlId="body">
-                  <Form.Control
-                    value={postBody}
-                    onChange={(e) => setPostBody(e.target.value)}
-                    as="textarea"
-                  ></Form.Control>
+                  <ReactQuill
+                    className="mb-2 p-1"
+                    theme="snow"
+                    value={convertedText}
+                    onChange={setConvertedText}
+                  />
                 </Form.Group>
                 <Form.Group controlId="image">
                   <Form.Label>Image</Form.Label>
@@ -189,7 +191,8 @@ const BlogScreen = () => {
                   {uploading && <Loader />}
                 </Form.Group>
                 <Button
-                  variant="dark-btn"
+                  className="my-3"
+                  variant="outline-dark"
                   type="submit"
                   onClick={handlePostClose}
                 >
@@ -209,10 +212,10 @@ const BlogScreen = () => {
         >
           <Toast.Header>{message}</Toast.Header>
         </Toast>{" "}
-        <Card>
-          <Row className="mb-3">
-            {blogs &&
-              blogs
+        {blogs && blogs.length > 0 ? (
+          <Card>
+            <Row className="mb-3">
+              {blogs
                 .sort(
                   (a, b) => Date.parse(b.createdAt) - Date.parse(a.createdAt)
                 )
@@ -223,8 +226,13 @@ const BlogScreen = () => {
                     </Col>
                   );
                 })}
-          </Row>
-        </Card>
+            </Row>
+          </Card>
+        ) : (
+          <Message variant="info">
+            No Blog Posts. Be the first to contribute to our community!
+          </Message>
+        )}
       </Container>
     </>
   );

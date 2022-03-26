@@ -2,40 +2,44 @@ import asyncHandler from "express-async-handler";
 import Order from "../models/orderModel.js";
 import User from "../models/userModel.js";
 
+const getTaxPrice = (total) => {
+  var price = Number((0.15 * total).toFixed(2));
+  return +price;
+};
+
+const getShippingPrice = (total) => {
+  var price = total >= 100 ? 20 : 10;
+  return +price;
+};
+
 //@desc Create Order
 //@route POST /api/orders
 //@access User
 const createOrder = asyncHandler(async (req, res) => {
-  const {
-    orderItems,
-    shippingAddress,
-    paymentMethod,
-    itemsPrice,
-    taxPrice,
-    shippingPrice,
-    totalPrice,
-  } = req.body;
+  const { profile } = req.body;
+  const priceArray = profile.cartItems.map((c) => c.totalPrice);
+  const itemsPrice = priceArray.reduce((c, a) => c + a, 0);
   const user = await User.findById(req.user._id);
-  console.log(user);
-  if (orderItems && orderItems.length === 0) {
+  if (profile.cartItems && profile.cartItems.length === 0) {
     res.status(400);
     throw new Error("No order items");
   } else {
     const order = new Order({
-      orderItems,
+      orderItems: profile.cartItems,
+      customerName: profile.name,
+      email: profile.email,
       user: req.user._id,
-      shippingAddress,
-      paymentMethod,
-      itemsPrice,
-      taxPrice,
-      shippingPrice,
-      totalPrice,
+      shippingAddress: profile.shippingAddress,
+      itemsPrice: +itemsPrice,
+      taxPrice: +getTaxPrice(itemsPrice),
+      shippingPrice: +getShippingPrice(itemsPrice),
+      totalPrice:
+        itemsPrice + +getTaxPrice(itemsPrice) + +getShippingPrice(itemsPrice),
     });
 
     const createdOrder = await order.save();
-    user.cartItems = null;
+    user.cartItems = [];
     await user.save();
-
     res.status(201).json(createdOrder);
   }
 });
@@ -91,6 +95,22 @@ const getAllOrders = asyncHandler(async (req, res) => {
   }
 });
 
+//@desc Update Order Shipping
+//@route PUT /api/orders/:id/shipping
+//@access User
+const updateOrderShipping = asyncHandler(async (req, res) => {
+  const order = await Order.findById(req.params.id);
+  if (order) {
+    order.shippingAddress = req.body.shippingAddress;
+
+    await order.save();
+    res.json(order.shippingAddress);
+  } else {
+    res.status(404);
+    throw new Error("Order not found");
+  }
+});
+
 //@desc Update Order to Paid
 //@route PUT /api/orders/:id/pay
 //@access User
@@ -100,6 +120,7 @@ const updateOrderPaid = asyncHandler(async (req, res) => {
   if (order) {
     order.isPaid = true;
     order.paidAt = Date.now();
+    order.paymentMethod = req.body.paymentMethod;
 
     const updatedOrder = await order.save();
     res.json(updatedOrder);
@@ -113,7 +134,6 @@ const updateOrderPaid = asyncHandler(async (req, res) => {
 //@route PUT /api/orders/:id/deliver
 //@access Admin
 const updateOrderDelivered = asyncHandler(async (req, res) => {
-  console.log(req.body);
   const order = await Order.findById(req.params.id);
 
   if (order) {
@@ -132,6 +152,7 @@ export {
   createOrder,
   updateOrderPaid,
   updateOrderDelivered,
+  updateOrderShipping,
   getAllOrders,
   getOrderById,
   getOwnOrders,

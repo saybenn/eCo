@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import {
   Card,
@@ -8,7 +8,6 @@ import {
   Modal,
   Form,
   Toast,
-  Image,
   ListGroupItem,
 } from "react-bootstrap";
 import { Link } from "react-router-dom";
@@ -139,7 +138,7 @@ const BlogScreenBlogPosts = ({ blog }) => {
           </FormContainer>
         </Modal.Body>
       </Modal>
-      <Card className="blogscreen-card" className="m-3" key={blog._id}>
+      <Card className="blogscreen-card m-3" key={blog._id}>
         <Link to={`/blog/${blog._id}`} className="blogcard-top">
           {" "}
           <Card.Img className="blogcard-image" variant="top" src={blog.image} />
@@ -150,10 +149,10 @@ const BlogScreenBlogPosts = ({ blog }) => {
         </Link>
         <ListGroupItem>
           <Link to={`/blog/${blog._id}`}>
-            {blog.body.length > 150 ? (
-              <p>{`${blog.body.substring(0, 150)} ...Read More`}</p>
+            {blog.description.length > 150 ? (
+              <p>{`${blog.description.substring(0, 150)} ...Read More`}</p>
             ) : (
-              <p>{blog.body}</p>
+              <p>{blog.description}</p>
             )}
           </Link>
         </ListGroupItem>
@@ -191,7 +190,7 @@ const BlogScreenBlogPosts = ({ blog }) => {
                 {blog.replies.length && blog.replies.length}{" "}
                 <i
                   style={{ color: "rgb(195, 216, 226)" }}
-                  class="fa-solid fa-comment"
+                  className="fa-solid fa-comment"
                 ></i>
               </Button>
             </div>

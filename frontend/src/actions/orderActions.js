@@ -18,6 +18,9 @@ import {
   ORDER_LIST_REQUEST,
   ORDER_LIST_SUCCESS,
   ORDER_LIST_FAIL,
+  UPDATE_ORDER_REQUEST,
+  UPDATE_ORDER_SUCCESS,
+  UPDATE_ORDER_FAIL,
 } from "../constants/orderConstants";
 
 export const listMyOrders = () => async (dispatch, getState) => {
@@ -72,7 +75,7 @@ export const getOrder = (id) => async (dispatch, getState) => {
   }
 };
 
-export const createOrder = (order) => async (dispatch, getState) => {
+export const createOrder = (profile) => async (dispatch, getState) => {
   try {
     dispatch({ type: CREATE_ORDER_REQUEST });
     const {
@@ -84,7 +87,7 @@ export const createOrder = (order) => async (dispatch, getState) => {
         Authorization: `Bearer ${userInfo.token}`,
       },
     };
-    const { data } = await axios.post("api/orders", order, config);
+    const { data } = await axios.post("api/orders", { profile }, config);
 
     dispatch({ type: CREATE_ORDER_SUCCESS, payload: data });
   } catch (error) {
@@ -129,8 +132,39 @@ export const listOrders =
     }
   };
 
+export const updateOrder =
+  (orderId, shippingAddress) => async (dispatch, getState) => {
+    try {
+      dispatch({ type: UPDATE_ORDER_REQUEST });
+      const {
+        userLogin: { userInfo },
+      } = getState();
+
+      const config = {
+        headers: {
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      };
+      const { data } = await axios.put(
+        `/api/orders/${orderId}/shipping`,
+        { shippingAddress },
+        config
+      );
+
+      dispatch({ type: UPDATE_ORDER_SUCCESS, payload: data });
+    } catch (error) {
+      dispatch({
+        type: UPDATE_ORDER_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      });
+    }
+  };
+
 export const payOrder =
-  (orderId, paymentResult) => async (dispatch, getState) => {
+  (orderId, paymentOrder) => async (dispatch, getState) => {
     try {
       dispatch({ type: PAY_ORDER_REQUEST });
       const {
@@ -144,7 +178,7 @@ export const payOrder =
       };
       const { data } = await axios.put(
         `/api/orders/${orderId}/pay`,
-        paymentResult,
+        { paymentOrder },
         config
       );
 

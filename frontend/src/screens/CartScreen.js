@@ -7,6 +7,7 @@ import { useNavigate } from "react-router-dom";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import { getCart, controlCart } from "../actions/cartActions";
+import { logout } from "../actions/userActions";
 
 const CartScreen = () => {
   const dispatch = useDispatch();
@@ -22,11 +23,17 @@ const CartScreen = () => {
   const { success } = cartControl;
 
   useEffect(() => {
+    dispatch(getCart());
+
     if (!userInfo) {
+      dispatch(logout());
       navigate("/login");
     }
-    dispatch(getCart());
-  }, [dispatch, navigate, success, userInfo]);
+
+    if (success) {
+      dispatch(getCart());
+    }
+  }, [dispatch, navigate, userInfo, success]);
 
   const checkoutHandler = () => {
     navigate("/shipping");
@@ -36,15 +43,9 @@ const CartScreen = () => {
     <>
       <Container>
         <h1>Shopping Cart</h1>
-        {loading ? (
-          <Loader />
-        ) : error ? (
-          <Message variant="danger">{error}</Message>
-        ) : !cartItems ? (
-          <Message>
-            You cart is empty <Link to="/">Go Back</Link>
-          </Message>
-        ) : (
+        {loading && <Loader />}
+        {error && <Message variant="danger">{error}</Message>}
+        {cartItems && cartItems.length > 0 && (
           <Row>
             <Col md={9}>
               <Card>
@@ -93,7 +94,7 @@ const CartScreen = () => {
                           </Row>
                         </Col>
                         <Col className="d-flex justify-content-center" md={2}>
-                          {item.totalPrice}
+                          ${item.totalPrice.toFixed(2)}
                         </Col>
                         <Col md={1}>
                           {" "}
@@ -117,7 +118,7 @@ const CartScreen = () => {
                 <ListGroup variant="flush">
                   <ListGroup.Item>
                     <h2>
-                      {` Subtotal 
+                      {`Subtotal 
                     ${
                       cartItems &&
                       cartItems.reduce((acc, item) => acc + item.qty, 0)
@@ -131,19 +132,24 @@ const CartScreen = () => {
                         .toFixed(2)}
                   </ListGroup.Item>
                   <ListGroup.Item>
-                    <Button
-                      type="button"
-                      className="btn-block"
-                      disabled={cartItems && cartItems.length === 0}
-                      onClick={checkoutHandler}
-                    >
-                      Proceed to Checkout
-                    </Button>
+                    <Link to="/shipping">
+                      <Button
+                        className="btn-block btn-dark"
+                        disabled={cartItems && cartItems.length === 0}
+                      >
+                        Proceed to Checkout
+                      </Button>
+                    </Link>
                   </ListGroup.Item>
                 </ListGroup>
               </Card>
             </Col>
           </Row>
+        )}
+        {cartItems && cartItems.length === 0 && (
+          <Message>
+            You cart is empty <Link to="/">Go Back</Link>
+          </Message>
         )}
       </Container>
     </>

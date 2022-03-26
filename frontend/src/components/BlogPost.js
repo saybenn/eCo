@@ -8,6 +8,7 @@ import {
   deleteBlogPost,
 } from "../actions/blogActions";
 import FormContainer from "./FormContainer";
+import { Link } from "react-router-dom";
 
 const BlogPost = ({ blog }) => {
   const [message, setMessage] = useState("");
@@ -72,7 +73,10 @@ const BlogPost = ({ blog }) => {
       <Card.Body>
         <Card.Title>
           <Row>
-            <Col md={10}>{blog.title}</Col>
+            <Col md={10}>
+              <Link to={`/blog/${blog._id}`}>{blog.title}</Link>
+            </Col>
+
             {userInfo && userInfo._id === blog.user && (
               <Col className="d-flex justify-content-end" md={2}>
                 <Button
@@ -88,10 +92,17 @@ const BlogPost = ({ blog }) => {
             )}
           </Row>
         </Card.Title>
+
         <Card.Subtitle className="text-muted mb-2">
           {`${blog.author} - ${blog.createdAt.toString().substring(0, 10)}`}
         </Card.Subtitle>
-        <Card.Text>{blog.body}</Card.Text>
+        <Card.Text>
+          <Link to={`/blog/${blog._id}`}>
+            {blog.description.length > 250
+              ? `${blog.description.substring(0, 50)} ...Read More`
+              : blog.description}
+          </Link>
+        </Card.Text>
         <Row>
           <Col md={2}>
             {userInfo && blog.likes.find((l) => l.userid === userInfo._id) ? (

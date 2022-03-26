@@ -14,7 +14,6 @@ import {
   USER_DETAILS_FAIL,
   USER_DETAILS_REQUEST,
   USER_DETAILS_SUCCESS,
-  USER_PAYMENT_METHOD_SAVE,
   USER_SHIPPING_SAVE_FAIL,
   USER_SHIPPING_SAVE_REQUEST,
   USER_SHIPPING_SAVE_SUCCESS,
@@ -30,6 +29,10 @@ import {
   USER_AUTHOR_SUCCESS,
   USER_AUTHOR_FAIL,
   USER_AUTHOR_REQUEST,
+  USER_PROFILE_REQUEST,
+  USER_PROFILE_SUCCESS,
+  USER_PROFILE_FAIL,
+  USER_PROFILE_RESET,
 } from "../constants/userConstants";
 
 export const register = (name, email, password) => async (dispatch) => {
@@ -89,9 +92,38 @@ export const logout = () => async (dispatch) => {
   try {
     localStorage.removeItem("userInfo");
     dispatch({ type: LOGOUT_USER_SUCCESS });
+    dispatch({ type: USER_PROFILE_RESET });
   } catch (error) {
     dispatch({
       type: LOGOUT_USER_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    });
+  }
+};
+
+export const getUserProfile = () => async (dispatch, getState) => {
+  try {
+    dispatch({ type: USER_PROFILE_REQUEST });
+
+    const {
+      userLogin: { userInfo },
+    } = getState();
+
+    const config = {
+      headers: {
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    };
+
+    const { data } = await axios.get(`/api/users/profile`, config);
+
+    dispatch({ type: USER_PROFILE_SUCCESS, payload: data });
+  } catch (error) {
+    dispatch({
+      type: USER_PROFILE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message
@@ -310,7 +342,3 @@ export const saveShippingAddress =
       });
     }
   };
-
-export const savePaymentMethod = (data) => async (dispatch) => {
-  dispatch({ type: USER_PAYMENT_METHOD_SAVE, payload: data });
-};

@@ -27,18 +27,18 @@ const addItemToCart = asyncHandler(async (req, res) => {
   const productExist = user.cartItems.find(
     (i) => i.productId.toString() === _id && i.options === options
   );
-
   if (productExist) {
     productExist.qty = +productExist.qty + +qty;
     productExist.totalPrice = productExist.qty * productExist.price;
     await user.save();
     res.json(user.cartItems);
   } else {
-    if (user) {
+    try {
       const cartItem = {
         name,
         image,
         price,
+        totalPrice: (price * qty).toFixed(2),
         qty,
         productId: _id,
         options,
@@ -47,8 +47,9 @@ const addItemToCart = asyncHandler(async (req, res) => {
       user.cartItems.push(cartItem);
       await user.save();
       res.json(user.cartItems);
-    } else {
+    } catch (error) {
       res.status(400);
+      console.log(error);
       throw new Error("Addition to cart could not be made.");
     }
   }

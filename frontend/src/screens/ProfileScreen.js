@@ -9,9 +9,12 @@ import Container from "../components/Container";
 import Loader from "../components/Loader";
 import Message from "../components/Message";
 import BlogPost from "../components/BlogPost";
-import { updateProfile, getUserDetails } from "../actions/userActions";
+import { updateProfile, getUserProfile, logout } from "../actions/userActions";
 import { listMyOrders } from "../actions/orderActions";
-import { UPDATE_PROFILE_RESET } from "../constants/userConstants";
+import {
+  UPDATE_PROFILE_RESET,
+  USER_PROFILE_RESET,
+} from "../constants/userConstants";
 import { listMyBlogs } from "../actions/blogActions";
 
 const ProfileScreen = () => {
@@ -26,8 +29,8 @@ const ProfileScreen = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const userDetails = useSelector((state) => state.userDetails);
-  const { loading, error, user } = userDetails;
+  const userProfile = useSelector((state) => state.userProfile);
+  const { loading, error, profile } = userProfile;
 
   const userLogin = useSelector((state) => state.userLogin);
   const { userInfo } = userLogin;
@@ -43,20 +46,33 @@ const ProfileScreen = () => {
 
   useEffect(() => {
     if (!userInfo) {
+      dispatch(logout());
       navigate("/login");
     }
-    if (!user || !user.name || success) {
-      setEditState(false);
-      dispatch({ type: UPDATE_PROFILE_RESET });
-      dispatch(getUserDetails("profile"));
-      dispatch(listMyOrders());
-      dispatch(listMyBlogs());
-    } else {
-      setName(user.name);
-      setEmail(user.email);
-      setAuthorRequest(user.authorRequest);
+
+    if (!profile) {
+      dispatch(getUserProfile());
     }
-  }, [dispatch, userInfo, user, success, navigate]);
+
+    if (!orders) {
+      dispatch(listMyOrders());
+    }
+
+    if (!blogs) {
+      dispatch(listMyBlogs());
+    }
+
+    if (profile) {
+      setName(profile.name);
+      setEmail(profile.email);
+      setAuthorRequest(profile.authorRequest);
+    }
+
+    if (success) {
+      dispatch({ type: USER_PROFILE_RESET });
+      setEditState(false);
+    }
+  }, [dispatch, userInfo, success, navigate, profile, orders, blogs]);
 
   const toggleAuthor = () => {
     if (!authorRequest) {
@@ -92,13 +108,12 @@ const ProfileScreen = () => {
     <>
       <Container>
         <Row className="mb-3">
-          {loading && <Loader />}
           {error && <Message variant="danger">{error}</Message>}
           {message && <Message variant="alert">{message}</Message>}
           {success && (
             <Message variant="alert">Profile Successfully Updated!</Message>
           )}
-          {userInfo && (
+          {profile && (
             <Col md={4}>
               <h2>User Profile</h2>
               <Card className="p-3">
@@ -161,31 +176,19 @@ const ProfileScreen = () => {
                       >
                         <i className="fas fa-info-circle mx-1"></i>
                       </Tippy>
-                      {user && user.isAuthor ? (
-                        <Button
-                          onClick={toggleAuthor}
-                          variant="success"
-                          disabled
-                        >
+                      {profile && profile.isAuthor ? (
+                        <Button variant="success" disabled>
                           Authorized as Author
                         </Button>
-                      ) : user && user.authorRequest ? (
-                        <Button
-                          onClick={toggleAuthor}
-                          variant="secondary"
-                          disabled={
-                            !editState || user.isAuthor ? "disabled" : ""
-                          }
-                        >
+                      ) : profile && profile.authorRequest ? (
+                        <Button variant="secondary" disabled>
                           Author Role Requested
                         </Button>
                       ) : (
                         <Button
                           onClick={toggleAuthor}
-                          variant="info"
-                          disabled={
-                            !editState || user.isAuthor ? "disabled" : ""
-                          }
+                          variant={authorRequest ? "success" : "info"}
+                          disabled={!editState}
                         >
                           Request Author Role
                         </Button>
@@ -212,19 +215,15 @@ const ProfileScreen = () => {
             </Col>
           )}
 
-          {orderLoading ? (
-            <Loader />
-          ) : orderError ? (
-            <Message variant="danger">{orderError}</Message>
-          ) : (
-            <Col md={8}>
-              <h2>My Orders</h2>
+          <Col md={8}>
+            <h2>My Orders</h2>
+            {orders && orders.length > 0 ? (
               <Table
                 bordered
                 hover
                 responsive
                 className="table-sm"
-                variant="dark"
+                variant="secondary"
               >
                 <thead>
                   <tr>
@@ -264,8 +263,14 @@ const ProfileScreen = () => {
                           )}
                         </td>
                         <td>
-                          <LinkContainer to={`/order/${order._id}`}>
-                            <Button className="btn-sm" variant="light">
+                          <LinkContainer
+                            to={
+                              !order.isPaid
+                                ? `/order/${order._id}`
+                                : `/order/review/${order._id}`
+                            }
+                          >
+                            <Button className="btn-sm" variant="outline-dark">
                               Details
                             </Button>
                           </LinkContainer>
@@ -274,30 +279,25 @@ const ProfileScreen = () => {
                     ))}
                 </tbody>
               </Table>
-
-              {!orders && <Message variant="info">You Have No Orders</Message>}
-            </Col>
-          )}
+            ) : (
+              <Message variant="info">You Have No Orders</Message>
+            )}
+          </Col>
         </Row>
         <Row>
           <h2>My Blog Post</h2>
-          {blogLoading ? (
-            <Loader />
-          ) : blogError ? (
-            <Message variant="info">{blogError}</Message>
-          ) : (
-            <Col md={6}>
-              {blogs &&
-                blogs.map((blog) => (
-                  <Row key={blog._id} md={8}>
-                    <BlogPost blog={blog} />
-                  </Row>
-                ))}
-              {!blogs.length > 0 && (
-                <Message variant="info">You Have No Blog Posts</Message>
-              )}
-            </Col>
-          )}
+
+          <Col md={6}>
+            {blogs && blogs.length > 0 ? (
+              blogs.map((blog) => (
+                <Row key={blog._id} md={8}>
+                  <BlogPost blog={blog} />
+                </Row>
+              ))
+            ) : (
+              <Message variant="info">You Have No Blog Posts</Message>
+            )}
+          </Col>
         </Row>
       </Container>
     </>

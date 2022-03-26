@@ -127,7 +127,7 @@ export const commentBlog = (comment, id) => async (dispatch, getState) => {
 };
 
 export const createBlogPost =
-  (title, body, image) => async (dispatch, getState) => {
+  (title, body, image, description) => async (dispatch, getState) => {
     try {
       dispatch({ type: CREATE_BLOG_REQUEST });
 
@@ -144,7 +144,7 @@ export const createBlogPost =
 
       const { data } = await axios.post(
         "api/blogs/",
-        { title, body, image },
+        { title, body, image, description },
         config
       );
 
@@ -221,7 +221,7 @@ export const getSingleBlog = (id) => async (dispatch) => {
   try {
     dispatch({ type: SINGLE_BLOG_REQUEST });
 
-    const { data } = await axios.get(`api/blogs/${id}`);
+    const { data } = await axios.get(`/api/blogs/${id}`);
 
     dispatch({ type: SINGLE_BLOG_SUCCESS, payload: data });
   } catch (error) {
