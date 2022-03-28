@@ -10,7 +10,7 @@
 
 # production
 /frontend/build
-/frontend/node_modules/.cache
+/frontend/node_modules
 
 # misc
 .DS_Store
@@ -19,8 +19,7 @@
 .env.development.local
 .env.test.local
 .env.production.local
-/backend/seeder.js
-/backend/data
+
 
 
 npm-debug.log*
