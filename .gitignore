@@ -10,7 +10,8 @@
 
 # production
 /frontend/build
-/frontend/node_modules/.cache
+/frontend/node_modules
+
 # misc
 .DS_Store
 .env
