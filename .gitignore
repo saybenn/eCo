@@ -19,9 +19,7 @@
 .env.test.local
 .env.production.local
 /backend/seeder.js
-/backend/data/blog.js
-/backend/data/products.js
-/backend/data/users.js
+/backend/data
 
 
 npm-debug.log*
