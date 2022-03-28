@@ -9,8 +9,8 @@
 /coverage
 
 # production
-/build
-
+/frontend/build
+/frontend/node_modules/.cache
 # misc
 .DS_Store
 .env
@@ -18,10 +18,10 @@
 .env.development.local
 .env.test.local
 .env.production.local
-seeder.js
-blog.js
-products.js
-users.js
+/backend/seeder.js
+/backend/data/blog.js
+/backend/data/products.js
+/backend/data/users.js
 
 
 npm-debug.log*

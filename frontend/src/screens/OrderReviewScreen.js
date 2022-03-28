@@ -57,7 +57,7 @@ const OrderScreen = () => {
     <>
       <Container>
         {sent && (
-          <Message variant="success">Receipt was sent toy our email</Message>
+          <Message variant="success">Receipt was sent to your email</Message>
         )}
         {error && <Message variant="danger">{error}</Message>}
         {loading && <Loader />}

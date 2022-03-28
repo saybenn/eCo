@@ -50,7 +50,7 @@ const ProfileScreen = () => {
       navigate("/login");
     }
 
-    if (!profile) {
+    if (!profile || profile.name !== userInfo.name) {
       dispatch(getUserProfile());
     }
 
